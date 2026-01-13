@@ -1,0 +1,159 @@
+/* Global Reset & Box Sizing */
+:root {
+  --font-family: 'Segoe UI', 'Segoe UI Variable', sans-serif;
+  
+  /* Note Colors */
+  --note-yellow-bg: #fff7d1;
+  --note-yellow-header: #fff2ab;
+  --note-green-bg: #e4f9e0;
+  --note-green-header: #cbf1c4;
+  --note-pink-bg: #ffe4f1;
+  --note-pink-header: #ffcce5;
+  --note-purple-bg: #f2e6ff;
+  --note-purple-header: #e1d4ef;
+  --note-blue-bg: #e2f1ff;
+  --note-blue-header: #cce8ff;
+  --note-gray-bg: #f2f2f2;
+  --note-gray-header: #e1e1e1;
+  --note-charcoal-bg: #333333;
+  --note-charcoal-header: #2b2b2b;
+  --note-charcoal-text: #ffffff;
+
+  /* Default Theme (Yellow) */
+  --bg-color: var(--note-yellow-bg);
+  --header-color: var(--note-yellow-header);
+  --text-color: #000000;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-family);
+  background-color: transparent; /* Electron handles transparency */
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.note-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border-radius: 0; /* Sticky notes are rectangular? Actually win 11 has no radius on window usually, but inner content might */
+  /* Windows Sticky Notes has no border radius on the window itself usually if it's rect, but let's check screenshot. 
+     Actually Win11 Sticky Notes are rect. */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* Soft shadow */
+  transition: background-color 0.2s ease;
+}
+
+/* Header */
+.note-header {
+  height: 32px;
+  background-color: var(--header-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  -webkit-app-region: drag; /* Draggable */
+}
+
+/* Controls */
+.note-controls {
+  display: flex;
+  gap: 4px;
+  -webkit-app-region: no-drag;
+}
+
+.control-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  color: inherit;
+  opacity: 0.7;
+}
+.control-btn:hover {
+  background-color: rgba(0,0,0,0.05);
+  opacity: 1;
+}
+
+.close-btn:hover {
+  background-color: #c42b1c; /* Windows red */
+  color: white;
+}
+
+/* Content */
+.note-content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  outline: none;
+  user-select: text;
+  font-size: 14px;
+  line-height: 1.5;
+  cursor: text;
+}
+
+/* Scrollbar styling */
+.note-content::-webkit-scrollbar {
+  width: 6px;
+}
+.note-content::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.1);
+  border-radius: 3px;
+}
+.note-content::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0,0,0,0.2);
+}
+
+/* Footer (Tools) */
+.note-footer {
+  height: 40px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0; /* Hidden by default */
+  transition: opacity 0.2s;
+  background-color: var(--bg-color);
+}
+
+.note-container:hover .note-footer,
+.note-content:focus-within + .note-footer {
+  opacity: 1;
+}
+
+.tool-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  color: inherit;
+}
+.tool-btn:hover {
+  background-color: rgba(0,0,0,0.05);
+}
+.tool-btn.active {
+  background-color: rgba(0,0,0,0.1);
+}
+
+.dark-mode {
+  --text-color: var(--note-charcoal-text);
+}
