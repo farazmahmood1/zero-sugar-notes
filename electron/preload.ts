@@ -1,5 +1,7 @@
 import { ipcRenderer, contextBridge } from 'electron'
 
+console.log('[Preload] Script loaded successfully');
+
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld('ipcRenderer', {
   on(...args: Parameters<typeof ipcRenderer.on>) {
@@ -22,3 +24,14 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   // You can expose other APTs you need here.
   // ...
 })
+
+contextBridge.exposeInMainWorld('electron', {
+  saveNote: (note: any) => ipcRenderer.invoke('save-note', note),
+  getNotes: () => ipcRenderer.invoke('get-notes'),
+  deleteNote: (id: string) => ipcRenderer.invoke('delete-note', id),
+  requestNotesListView: () => ipcRenderer.invoke('request-notes-list-view'),
+  releaseNotesListView: () => ipcRenderer.invoke('release-notes-list-view'),
+  onBlink: (callback: () => void) => ipcRenderer.on('action-blink', (_e) => callback()),
+})
+
+

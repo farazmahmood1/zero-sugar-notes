@@ -54,9 +54,7 @@ body, html {
   flex-direction: column;
   background-color: var(--bg-color);
   color: var(--text-color);
-  border-radius: 0; /* Sticky notes are rectangular? Actually win 11 has no radius on window usually, but inner content might */
-  /* Windows Sticky Notes has no border radius on the window itself usually if it's rect, but let's check screenshot. 
-     Actually Win11 Sticky Notes are rect. */
+  border-radius: 0; 
   box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* Soft shadow */
   transition: background-color 0.2s ease;
 }
@@ -70,6 +68,10 @@ body, html {
   justify-content: space-between;
   padding: 0 8px;
   -webkit-app-region: drag; /* Draggable */
+}
+
+.no-drag {
+  -webkit-app-region: no-drag;
 }
 
 /* Controls */
@@ -98,6 +100,64 @@ body, html {
   color: white;
 }
 
+/* Menu Dropdown */
+.menu-container {
+  position: relative;
+}
+
+.menu-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #333; /* Dark menu as per screenshot */
+  color: white;
+  border-radius: 4px;
+  width: 200px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  margin-top: 4px;
+}
+
+.color-picker-row {
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  background-color: #333;
+}
+
+.color-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 1px;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.color-btn:hover {
+  transform: scale(1.1);
+}
+.color-btn.active {
+  box-shadow: 0 0 0 1px white;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.menu-item:hover {
+  background-color: rgba(255,255,255,0.1);
+}
+.delete-item {
+  /* color: #ff6b6b; */
+}
+
 /* Content */
 .note-content {
   flex: 1;
@@ -108,7 +168,21 @@ body, html {
   font-size: 14px;
   line-height: 1.5;
   cursor: text;
+  white-space: pre-wrap; /* Preserve formatting */
 }
+
+.note-content:empty:before {
+  content: attr(data-placeholder);
+  color: rgba(0,0,0,0.4);
+  cursor: text;
+}
+
+.note-content ul, .note-content ol {
+    padding-left: 20px;
+    margin-left: 0;
+    list-style-position: inside;
+}
+
 
 /* Scrollbar styling */
 .note-content::-webkit-scrollbar {
@@ -154,6 +228,270 @@ body, html {
   background-color: rgba(0,0,0,0.1);
 }
 
+
+/* Notes List View */
+.notes-list-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+  color: inherit;
+  overflow: hidden;
+}
+
+.app-title {
+  font-weight: 700;
+  font-size: 14px;
+  padding-left: 8px;
+  color: inherit;
+  -webkit-app-region: drag;
+  flex: 1;
+}
+
+.search-bar {
+  padding: 12px;
+  background-color: transparent;
+  display: flex; /* Flex container */
+  align-items: center;
+  gap: 8px; /* Gap between input and button */
+}
+
+.search-input-wrapper {
+  position: relative;
+  flex: 1; /* Takes remaining space */
+  display: flex;
+  align-items: center;
+}
+
+.search-bar input {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 1px solid transparent;
+  color: #333; /* Force dark text as background is light */
+  padding: 8px 12px 8px 36px; /* Space for icon */
+  border-radius: 4px;
+  outline: none;
+  font-size: 13px;
+  transition: background-color 0.2s;
+}
+
+.search-bar input::placeholder {
+  color: rgba(0,0,0,0.5);
+}
+
+.search-bar input:focus {
+  border-color: rgba(0,0,0,0.2);
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px; /* Adjusted for wrapper */
+  color: rgba(0,0,0,0.5);
+  pointer-events: none;
+}
+
+.create-note-btn {
+  background-color: rgba(255, 255, 255, 0.5);
+  border: none;
+  width: 34px; /* Match input height roughly */
+  height: 34px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.1s;
+  color: #333 !important; /* Force dark icon */
+  flex-shrink: 0;
+}
+
+.create-note-btn:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #000 !important;
+}
+
+.notes-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.note-list-item {
+  background-color: transparent;
+  padding: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  transition: background-color 0.1s;
+}
+
+.note-list-item:hover {
+  background-color: rgba(0,0,0,0.05);
+}
+
+.note-info {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.note-preview-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  font-weight: 500;
+  color: inherit;
+}
+
+.note-date {
+  font-size: 12px;
+  color: rgba(51, 51, 51, 0.6);
+}
+
+.delete-note-btn {
+  background: none;
+  border: none;
+  color: rgba(0,0,0,0.4);
+  cursor: pointer;
+  padding: 4px; 
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+.note-list-item:hover .delete-note-btn {
+  opacity: 1;
+}
+
+.delete-note-btn:hover {
+  color: #fff;
+  background-color: #c42b1c;
+  border-radius: 4px;
+}
+
+/* Empty State */
+.empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 40px;
+  padding-bottom: 40px;
+  color: rgba(0,0,0,0.5);
+  text-align: center;
+  font-size: 14px;
+  gap: 24px;
+}
+
+.empty-state-image {
+  opacity: 0.8;
+}
+
+.sticky-graphic {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.sticky-graphic-inner {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  width: 60px;
+  height: 60px;
+  background-color: #333;
+  border-radius: 8px;
+  transform: rotate(-10deg);
+  box-shadow: 0 0 0 2px #555;
+}
+
+.sticky-graphic-inner::after {
+  content: '';
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  color: #fff; /* sparkly bits could go here, but keep simple */
+}
+
+/* Pencil graphic mostly generic */
+.sticky-pencil {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  /* Use a pseudo element to draw a simple diagonal line/pencil if we wanted, 
+     but let's just stick to a simple placeholder or improved graphic */
+}
+/* Re-doing graphic with just CSS is hard to make identical to screenshot without SVG.
+   Let's try to make a cleaner CSS art of a pencil on a note. */
+   
+.sticky-graphic-inner {
+   background: #333;
+   width: 80px;
+   height: 80px;
+   border-radius: 4px;
+   transform: rotate(-5deg);
+   box-shadow: inset 0 0 0 2px #555;
+}
+
+.sticky-pencil {
+    position: absolute;
+    width: 10px;
+    height: 80px;
+    background: #62b5bf; /* Teal color from screenshot */
+    top: 10px;
+    left: 30px;
+    transform: rotate(30deg);
+    border-radius: 5px;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+.sticky-pencil::before { /* Tip */
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 0; 
+    height: 0; 
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 10px solid #e0e0e0;
+}
+
+.no-results {
+  text-align: center;
+  margin-top: 40px;
+  color: #999;
+  font-size: 14px;
+}
+
 .dark-mode {
   --text-color: var(--note-charcoal-text);
+  background-color: #1e1e1e; /* Ensure the main container is dark in list view */
+}
+
+/* Ensure settings icon is centered */
+.settings-icon {
+  display: flex;
+  align-items: center;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; } /* Dip lower for visibility */
+  100% { opacity: 1; }
+}
+
+.blink-anim {
+  animation: blink 0.2s ease-in-out 3;
 }
