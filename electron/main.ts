@@ -585,6 +585,7 @@ app.whenReady().then(() => {
         }
       });
 
+
       const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
       const GOOGLE_CLIENT_SECRET = import.meta.env.VITE_GOOGLE_CLIENT_SECRET;
       const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
