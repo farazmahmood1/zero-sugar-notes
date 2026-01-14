@@ -21,6 +21,7 @@
     "target": [
       {
         "target": "nsis",
+        "icon": "dist/Ghosts Notes.png",
         "arch": [
           "x64"
         ]

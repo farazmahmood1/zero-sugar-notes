@@ -31,6 +31,7 @@ export function NoteEditor({ initialContent, onContentChange }: NoteEditorProps)
     const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
         // Determine if we save HTML or Text. Prefer HTML for formatting.
         const content = e.currentTarget.innerHTML
+        // console.log('[NoteEditor] Input detected. Length:', content.length);
         onContentChange(content)
     }
 

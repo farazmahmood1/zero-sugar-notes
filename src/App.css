@@ -354,7 +354,7 @@ body, html {
 
 .note-date {
   font-size: 12px;
-  color: rgba(51, 51, 51, 0.6);
+  color: rgba(179, 177, 177, 0.6);
 }
 
 .delete-note-btn {
@@ -475,23 +475,73 @@ body, html {
   font-size: 14px;
 }
 
-.dark-mode {
-  --text-color: var(--note-charcoal-text);
-  background-color: #1e1e1e; /* Ensure the main container is dark in list view */
+
+/* Global App Wrapper for handling Themes */
+.app-wrapper {
+  width: 100%;
+  height: 100%;
+  transition: background-color 0.2s, color 0.2s;
+  overflow: hidden; /* integrated from body/html setup */
 }
 
-/* Ensure settings icon is centered */
-.settings-icon {
+.app-wrapper.light-mode {
+  background-color: #ffffff; /* Explicit light background */
+  color: #333333;
+}
+
+/* Dark Mode Overrides */
+/* Use specificity to apply to wrapper */
+.app-wrapper.dark-mode {
+  background-color: #1e1e1e;
+  color: #ffffff;
+   --text-color: #ffffff;
+}
+
+/* Onboarding Styles moved from inline */
+.onboarding-container {
+  height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+  background-size: cover;
+  transition: background 0.3s;
 }
 
-@keyframes blink {
-  0% { opacity: 1; }
-  50% { opacity: 0.3; } /* Dip lower for visibility */
-  100% { opacity: 1; }
+/* Theme-dependent backgrounds for Onboarding */
+.app-wrapper.dark-mode .onboarding-container {
+  background: linear-gradient(135deg, #1e1e1e 0%, #000000 100%);
+  color: white;
 }
 
-.blink-anim {
-  animation: blink 0.2s ease-in-out 3;
+.app-wrapper.light-mode .onboarding-container {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+  color: #333;
+}
+
+/* Ensure Notes List View inherits correctly if needed */
+.app-wrapper.dark-mode .notes-list-view .note-list-item:hover {
+  background-color: rgba(255,255,255,0.05); /* Lighter hover in dark mode */
+}
+
+.app-wrapper.dark-mode .search-bar input {
+  background-color: rgba(255,255,255,0.1);
+  color: white;
+}
+.app-wrapper.dark-mode .search-bar input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+.app-wrapper.dark-mode .search-icon {
+  color: rgba(255,255,255,0.5);
+}
+
+.app-wrapper.dark-mode .create-note-btn {
+    background-color: rgba(255,255,255,0.1);
+    color: white !important;
+}
+
+.app-wrapper.dark-mode .empty-state {
+    color: rgba(255,255,255,0.4);
 }

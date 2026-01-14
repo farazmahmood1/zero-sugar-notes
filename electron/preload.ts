@@ -32,6 +32,19 @@ contextBridge.exposeInMainWorld('electron', {
   requestNotesListView: () => ipcRenderer.invoke('request-notes-list-view'),
   releaseNotesListView: () => ipcRenderer.invoke('release-notes-list-view'),
   onBlink: (callback: () => void) => ipcRenderer.on('action-blink', (_e) => callback()),
+  openNotesList: () => ipcRenderer.send('open-notes-list'),
+  openSettings: () => ipcRenderer.send('open-settings'),
+  openOnboarding: () => ipcRenderer.send('open-onboarding'),
+  onNotesUpdated: (callback: (notes: any[]) => void) => {
+    const subscription = (_event: any, notes: any[]) => callback(notes);
+    ipcRenderer.on('notes-updated', subscription);
+    return () => ipcRenderer.removeListener('notes-updated', subscription);
+  },
+  getConfig: () => ipcRenderer.invoke('get-config'),
+  saveConfig: (config: any) => ipcRenderer.invoke('save-config', config),
+  completeOnboarding: () => ipcRenderer.send('complete-onboarding'),
+  onConfigUpdated: (callback: (config: any) => void) => ipcRenderer.on('config-updated', (_event, config) => callback(config)),
+  loginGoogle: () => ipcRenderer.invoke('login-google'),
 })
 
 

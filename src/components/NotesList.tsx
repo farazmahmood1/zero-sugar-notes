@@ -53,7 +53,7 @@ export function NotesList({ notes, searchQuery, setSearchQuery, onOpenNote, onDe
                     <Search className="search-icon" size={16} />
                 </div>
                 <button className="create-note-btn" onClick={onCreateNote}>
-                    X<Plus size={20} />
+                    +
                 </button>
             </div>
 
@@ -72,11 +72,13 @@ export function NotesList({ notes, searchQuery, setSearchQuery, onOpenNote, onDe
                     {filteredNotes.map(n => (
                         <div key={n.id} className="note-list-item" onClick={() => onOpenNote(n)}>
                             <div className="note-info">
-                                <div className="note-preview-text">{getPreview(n.content) || 'Empty note'}</div>
+                                <div className="note-preview-text">
+                                    {(!n.content || n.content.trim() === '') ? 'Empty Note' : getPreview(n.content)}
+                                </div>
                                 <div className="note-date">{formatDate(n.updatedAt)}</div>
                             </div>
                             <button className="delete-note-btn" onClick={(e) => onDeleteNote(e, n.id)}>
-                                <X size={14} />
+                                <X size={14} color="white" />
                             </button>
                         </div>
                     ))}
